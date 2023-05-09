@@ -1,7 +1,9 @@
 import { createBrowserRouter} from 'react-router-dom';
+
 import Home from '../components/Home';
 import About from '../components/About';
 import Prediction from '../components/Prediction';
+import Beaches from '../components/Beaches';
 
 const Router = createBrowserRouter([
     {
@@ -19,8 +21,18 @@ const Router = createBrowserRouter([
         element: <Prediction />,
         children:[
             {
-                path: '/:id',
+                path: ':id',
                 element: <Prediction />
+            }
+        ]
+    },
+    {
+        path: '/beaches',
+        element: <Beaches />,
+        children:[
+            {
+                path: ':id',
+                element: <Beaches />
             }
         ]
     }
