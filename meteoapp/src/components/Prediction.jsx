@@ -1,6 +1,5 @@
 import {useState,useEffect} from 'react';
 import { useParams,useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import codes from '../data/bizkaia.json';
 
 const Prediction = () => {
@@ -70,7 +69,6 @@ const Prediction = () => {
 
     return(
         <div className='prediction'>
-            <Link to='/'>Home</Link>
             <h1>Prediction for {location}</h1>
             <select name="location" id="location" onChange={(e)=>goTo(e.target.value)} value={locationCode ? locationCode:''}>
                 {!locationCode && <option value=''>Selecciona un municipio</option>}

@@ -9,33 +9,35 @@ const Router = createBrowserRouter([
     {
         path: '/',
         element: <Home />,
-        errorElement: <div>404 Not Found</div>
-
-    },
-    {
-        path: '/about',
-        element: <About />
-    },
-    {
-        path: '/prediction',
-        element: <Prediction />,
+        errorElement: <div>404 Not Found</div>,
         children:[
             {
-                path: ':id',
-                element: <Prediction />
-            }
-        ]
-    },
-    {
-        path: '/beaches',
-        element: <Beaches />,
-        children:[
+                path: '/about',
+                element: <About />
+            },
             {
-                path: ':id',
-                element: <Beaches />
+                path: '/prediction',
+                element: <Prediction />,
+                children:[
+                    {
+                        path: ':id',
+                        element: <Prediction />
+                    }
+                ]
+            },
+            {
+                path: '/beaches',
+                element: <Beaches />,
+                children:[
+                    {
+                        path: ':id',
+                        element: <Beaches />
+                    }
+                ]
             }
         ]
     }
+    
 ]);
 
 

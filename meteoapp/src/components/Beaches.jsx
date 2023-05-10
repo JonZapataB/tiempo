@@ -1,18 +1,27 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import playas from '../data/playas.json';
 
 const Beaches = () => {
-    let { id } = useParams();
-    if (id === undefined) {
-        id = 4804801;
-    }
+
     const [predictions, setPredictions] = useState([]);
     const [name, setName] = useState('');
+    const [beachCode, setBeachCode] = useState(null);
+    let {id} = useParams();
+    const navigate = useNavigate();
     
+    useEffect(() => {
+        if (id !== undefined) {
+            setBeachCode(id);
+            const newName = playas.find(beach => beach.ID_PLAYA == id).NOMBRE_PLAYA;
+            setName(newName);
+        }
+    },[id])
+
     const api_key = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb256aXBpMTk5OUBob3RtYWlsLmNvbSIsImp0aSI6IjFjYzE0YjQwLTU1ZGUtNDU4ZS1hNDdiLTdjYjlmNjBjZWJkYyIsImlzcyI6IkFFTUVUIiwiaWF0IjoxNjgzNTM1ODEyLCJ1c2VySWQiOiIxY2MxNGI0MC01NWRlLTQ1OGUtYTQ3Yi03Y2I5ZjYwY2ViZGMiLCJyb2xlIjoiIn0.eXFFHrGyStu0gvXOgE5Oa-9WwfPQR6YFdWvZ09uEqNM'
     useEffect(() => {
-        fetch(`https://opendata.aemet.es/opendata/api/prediccion/especifica/playa/${id}?api_key=${api_key}`)
+        if(!beachCode) return;
+        fetch(`https://opendata.aemet.es/opendata/api/prediccion/especifica/playa/${beachCode}?api_key=${api_key}`)
         .then(response => response.json())
         .then(data => {
             fetch(data.datos)
@@ -21,19 +30,27 @@ const Beaches = () => {
         })
         .catch(error => console.log(error))
 
-    },[id])
+    },[beachCode])
 
     const getPredictions = (data) => {
         console.log(data);
         const newPredictions = data[0].prediccion.dia;
         setPredictions(newPredictions);
-        setName(data[0].nombre);
     }
+
+    const goTo = (location) => {
+        navigate(`/beaches/${location}`);
+    } 
 
     return(
         <div className='beaches'>
-            <Link to='/'>Home</Link>
             <h1>Prediction for {name} beach</h1>
+            <select onChange={(e)=>goTo(e.target.value)} value={beachCode ? beachCode : ""}>
+                {!beachCode && <option value=''>Selecciona una playa </option>}
+                {playas.filter(beach=> beach.ID_PROVINCIA === 48).map((beach) => (
+                    <option key={beach.ID_PLAYA} value={beach.ID_PLAYA}>{beach.NOMBRE_PLAYA}</option>
+                ))}
+            </select>
             {predictions.map((prediction,index) => (
                 <article className='beaches__day' key={index}>
                         <h2>Fecha:{prediction.fecha}</h2>
